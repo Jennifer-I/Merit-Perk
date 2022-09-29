@@ -3,13 +3,11 @@ package com.decagon.reward_your_teacher.domain.entities.message;
 import com.decagon.reward_your_teacher.domain.entities.AbstractEntity;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
+import com.decagon.reward_your_teacher.domain.entities.enums.NotificationType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -27,6 +25,9 @@ public class NotificationEntity extends AbstractEntity {
             columnDefinition = "TEXT"
     )
     private String message;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
     @JsonBackReference
     @ManyToOne

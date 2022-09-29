@@ -21,4 +21,5 @@ public interface TeacherDao extends CrudDao<TeacherEntity, Long> {
     List<TeacherEntity> findTeacherEntitiesByNameIsContainingIgnoreCase(String name);
     Optional<TeacherEntity> findTeacherEntityByNin(String nin);
     Optional<List<TeacherEntity>> findTeacherEntitiesByName(String name);
+    TeacherEntity getTeacherByNameAndPhoneNumber(String name, String phoneNumber);
 }

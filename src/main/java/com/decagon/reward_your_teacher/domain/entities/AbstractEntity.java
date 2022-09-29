@@ -29,4 +29,7 @@ public abstract class AbstractEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    public AbstractEntity(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

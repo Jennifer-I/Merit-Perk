@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface NotificationDao extends CrudDao<NotificationEntity, Long> {
   List<NotificationEntity> findNotificationEntitiesByStudent(StudentEntity student);
 
-    List<NotificationEntity> findNotificationEntitiesByTeacher(TeacherEntity teacher);
+  List<NotificationEntity> findNotificationEntitiesByTeacher(TeacherEntity teacher);
 
 }
