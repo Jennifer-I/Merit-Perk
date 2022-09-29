@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
-    Optional<NotificationEntity> findNotificationEntitiesByCreatedAt(LocalDateTime localDateTime);
 
-   List<NotificationEntity> findNotificationEntitiesByStudent(StudentEntity student);
+    List<NotificationEntity> findNotificationEntitiesByStudent(StudentEntity student);
 
-   List<NotificationEntity> findNotificationEntitiesByTeacher(TeacherEntity teacher);
+    List<NotificationEntity> findNotificationEntitiesByTeacher(TeacherEntity teacher);
 }

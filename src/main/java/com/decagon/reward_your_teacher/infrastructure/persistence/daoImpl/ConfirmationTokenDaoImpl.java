@@ -1,18 +1,16 @@
 package com.decagon.reward_your_teacher.infrastructure.persistence.daoImpl;
 
-import com.decagon.reward_your_teacher.domain.dao.TeacherDao;
-import com.decagon.reward_your_teacher.domain.dao.TokenDao;
-import com.decagon.reward_your_teacher.domain.entities.Email.ConfirmationTokenEntity;
+import com.decagon.reward_your_teacher.domain.dao.ConfirmationTokenDao;
+import com.decagon.reward_your_teacher.domain.entities.email.ConfirmationTokenEntity;
 import com.decagon.reward_your_teacher.infrastructure.persistence.repository.ConfirmationTokenRepository;
-import com.decagon.reward_your_teacher.infrastructure.persistence.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
-public class TokenDaoImpl extends CrudDaoImpl<ConfirmationTokenEntity, Long> implements TokenDao {
+public class ConfirmationTokenDaoImpl extends CrudDaoImpl<ConfirmationTokenEntity, Long> implements ConfirmationTokenDao {
     private final ConfirmationTokenRepository confirmationTokenRepository;
-    protected TokenDaoImpl(ConfirmationTokenRepository confirmationTokenRepository) {
+    protected ConfirmationTokenDaoImpl(ConfirmationTokenRepository confirmationTokenRepository) {
         super(confirmationTokenRepository);
         this.confirmationTokenRepository = confirmationTokenRepository;
     }

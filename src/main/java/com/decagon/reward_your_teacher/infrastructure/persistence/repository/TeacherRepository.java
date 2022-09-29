@@ -23,5 +23,6 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Long> {
 
     Optional<TeacherEntity> findTeacherEntityByNin(String nin);
     Optional<List<TeacherEntity>> findTeacherEntitiesByName(String name);
+    TeacherEntity getTeacherEntityByNameContainingIgnoreCaseAndPhoneNumber(String name, String phoneNumber);
 
 }

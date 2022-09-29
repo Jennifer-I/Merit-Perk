@@ -1,6 +1,6 @@
 package com.decagon.reward_your_teacher.infrastructure.persistence.repository;
 
-import com.decagon.reward_your_teacher.domain.entities.Email.ConfirmationTokenEntity;
+import com.decagon.reward_your_teacher.domain.entities.email.ConfirmationTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

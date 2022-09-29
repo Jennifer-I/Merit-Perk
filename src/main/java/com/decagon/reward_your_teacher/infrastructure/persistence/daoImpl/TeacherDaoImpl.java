@@ -57,4 +57,9 @@ public class TeacherDaoImpl extends CrudDaoImpl<TeacherEntity, Long> implements 
     public Optional<List<TeacherEntity>> findTeacherEntitiesByName(String name) {
         return teacherRepository.findTeacherEntitiesByName(name);
     }
+
+    @Override
+    public TeacherEntity getTeacherByNameAndPhoneNumber(String name, String phoneNumber) {
+        return teacherRepository.getTeacherEntityByNameContainingIgnoreCaseAndPhoneNumber(name, phoneNumber);
+    }
 }
