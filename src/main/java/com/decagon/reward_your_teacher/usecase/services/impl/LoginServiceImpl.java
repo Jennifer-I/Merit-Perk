@@ -3,10 +3,12 @@ package com.decagon.reward_your_teacher.usecase.services.impl;
 import com.decagon.reward_your_teacher.domain.dao.AppUserDao;
 import com.decagon.reward_your_teacher.domain.dao.StudentDao;
 import com.decagon.reward_your_teacher.domain.dao.TeacherDao;
+import com.decagon.reward_your_teacher.domain.dao.WalletDao;
 import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
+import com.decagon.reward_your_teacher.domain.entities.transact.WalletEntity;
 import com.decagon.reward_your_teacher.infrastructure.configuration.security.JwtService;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.AuthenticationFailedException;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -37,6 +40,7 @@ public class LoginServiceImpl implements LoginService {
     private final TeacherDao teacherDao;
     private final AppUserDao appUserDao;
     private final PasswordEncoder passwordEncoder;
+    private final WalletDao walletDao;
 
     @Override
     public LoginResponse loginStudent(LoginRequest studentLoginRequest)  {
@@ -83,6 +87,12 @@ public class LoginServiceImpl implements LoginService {
                             .appUserEntity(user).build();
 
             studentDao.saveRecord(studentEntity);
+            WalletEntity wallet = new WalletEntity();
+            wallet.setBalance(new BigDecimal("0.00"));
+            wallet.setStudent(studentEntity);
+            wallet.setTotalMoneySent(new BigDecimal("0.00"));
+            walletDao.saveRecord(wallet);
+
         }
         String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
                 .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest
@@ -136,6 +146,11 @@ public class LoginServiceImpl implements LoginService {
                             .appUserEntity(user)
                             .displayPicture(socialLoginRequest.getDisplayPicture()).build();
             teacherDao.saveRecord(teacherEntity);
+            WalletEntity wallet = new WalletEntity();
+            wallet.setBalance(new BigDecimal("0.00"));
+            wallet.setTeacher(teacherEntity);
+            wallet.setTotalMoneySent(new BigDecimal("0.00"));
+            walletDao.saveRecord(wallet);
         }
         String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
                 .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest

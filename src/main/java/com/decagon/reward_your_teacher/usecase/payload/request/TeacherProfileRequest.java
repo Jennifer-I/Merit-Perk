@@ -28,4 +28,6 @@ public class TeacherProfileRequest {
     private String subjectsTaught;
     @Pattern(regexp = "[+-]?[0-9][0-9]*")
     private String nin;
+    @Pattern(regexp = "^(.+)@(\\S+)$", message = "Enter a valid phone number")
+    private String phone;
 }

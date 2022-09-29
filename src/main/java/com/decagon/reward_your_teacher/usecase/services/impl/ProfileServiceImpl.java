@@ -92,6 +92,7 @@ public class ProfileServiceImpl implements ProfileService {
         teacher.setName(teacherProfileRequest.getName());
         teacher.setSchool(school);
         teacher.setYearsOfTeaching(teacherProfileRequest.getYearsOfTeaching());
+        teacher.setPhoneNumber(teacherProfileRequest.getPhone());
         teacher.setNin(url);
 
         EditProfileResponse editProfileResponse = payLoadMapper.TeacherEditMapper( teacherDao.saveRecord(teacher));

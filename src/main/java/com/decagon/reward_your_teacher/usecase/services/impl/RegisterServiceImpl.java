@@ -2,8 +2,9 @@ package com.decagon.reward_your_teacher.usecase.services.impl;
 
 import com.decagon.reward_your_teacher.domain.dao.*;
 import com.decagon.reward_your_teacher.domain.entities.*;
-import com.decagon.reward_your_teacher.domain.entities.Email.ConfirmationTokenEntity;
-import com.decagon.reward_your_teacher.domain.entities.Email.EmailDetailsEntity;
+import com.decagon.reward_your_teacher.domain.entities.email.ConfirmationTokenEntity;
+import com.decagon.reward_your_teacher.domain.entities.transact.WalletEntity;
+import com.decagon.reward_your_teacher.usecase.payload.request.EmailDetailsRequest;
 import com.decagon.reward_your_teacher.domain.entities.enums.Position;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
 import com.decagon.reward_your_teacher.domain.entities.enums.Status;
@@ -12,9 +13,9 @@ import com.decagon.reward_your_teacher.infrastructure.error_handler.EntityAlread
 import com.decagon.reward_your_teacher.usecase.payload.request.StudentRegistrationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.TeacherRegistrationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.response.RegistrationResponse;
+import com.decagon.reward_your_teacher.usecase.services.ConfirmationTokenService;
 import com.decagon.reward_your_teacher.usecase.services.RegisterService;
 import com.decagon.reward_your_teacher.utils.CloudinaryService;
-import com.decagon.reward_your_teacher.utils.ConfirmationToken;
 import com.decagon.reward_your_teacher.utils.EmailService;
 import com.decagon.reward_your_teacher.utils.PayLoadMapper;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,8 +43,10 @@ public class RegisterServiceImpl implements RegisterService {
     private final CloudinaryService cloudinaryService;
     private final PayLoadMapper payLoadMapper;
     private final AppUserDao appUserDao;
-    private final ConfirmationToken confirmationTokenService;
+    private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+
+    private final WalletDao walletDao;
 
     @Override
     public RegistrationResponse registerTeacher(@Valid TeacherRegistrationRequest teacherRegistrationRequest, MultipartFile file) throws Exception {
@@ -80,20 +84,26 @@ public class RegisterServiceImpl implements RegisterService {
 
         RegistrationResponse response =payLoadMapper.teacherEntityMapper(teacherDao.saveRecord(teacher1));
         String token = UUID.randomUUID().toString();
-        EmailDetailsEntity emailDetailsEntity = EmailDetailsEntity.builder()
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
                 .msgBody(emailService.buildVerificationEmail(teacherRegistrationRequest.getName(),"http://localhost:9001/api/v1/register/verification?token=" + token))
                 .subject("PodA email")
                 .recipient(teacherRegistrationRequest.getEmail())
                 .attachment(fileUrl).build();
-        emailService.sendMailWithAttachment(emailDetailsEntity);
+        emailService.sendMailWithAttachment(emailDetailsRequest);
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
-                LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
                 appUserEntity1
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        WalletEntity wallet = new WalletEntity();
+        wallet.setBalance(new BigDecimal("0.00"));
+        wallet.setTeacher(teacher1);
+        wallet.setTotalMoneySent(new BigDecimal("0.00"));
+        walletDao.saveRecord(wallet);
+
         return response;
 
     }
@@ -123,12 +133,12 @@ public class RegisterServiceImpl implements RegisterService {
                 .build();
         RegistrationResponse response =payLoadMapper.studentEntityMapper(studentDao.saveRecord(student));
         String token = UUID.randomUUID().toString();
-        EmailDetailsEntity emailDetailsEntity = EmailDetailsEntity.builder()
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
                 .msgBody(emailService.buildVerificationEmail(studentRegistrationRequest.getName(),"http://localhost:9001/api/v1/register/verification?token=" + token))
                 .subject("PodA email")
                 .recipient(studentRegistrationRequest.getEmail())
                 .build();
-        emailService.sendMailWithAttachment(emailDetailsEntity);
+        emailService.sendMailWithAttachment(emailDetailsRequest);
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
@@ -137,6 +147,12 @@ public class RegisterServiceImpl implements RegisterService {
                 appUserEntity1
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        WalletEntity wallet = new WalletEntity();
+        wallet.setBalance(new BigDecimal("0.00"));
+        wallet.setStudent(student);
+        wallet.setTotalMoneySent(new BigDecimal("0.00"));
+        walletDao.saveRecord(wallet);
 
         return response;
     }
@@ -148,11 +164,11 @@ public class RegisterServiceImpl implements RegisterService {
             throw new CustomNotFoundException("token not found");
         }
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new EntityAlreadyExistException("email already confirmed");
         }
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new CustomNotFoundException("token expired");
         }
         confirmationTokenService.setConfirmedAt(userToken);
         confirmationToken.getAppUser().setVerified(true);

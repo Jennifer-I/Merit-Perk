@@ -7,8 +7,14 @@ import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.message.NotificationEntity;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
+import com.decagon.reward_your_teacher.infrastructure.persistence.repository.NotificationRepository;
+import com.decagon.reward_your_teacher.infrastructure.persistence.repository.StudentRepository;
+import com.decagon.reward_your_teacher.infrastructure.persistence.repository.TeacherRepository;
+import com.decagon.reward_your_teacher.usecase.payload.request.NotificationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.TransactionRequest;
+import com.decagon.reward_your_teacher.usecase.payload.response.NotificationResponse;
 import com.decagon.reward_your_teacher.usecase.services.NotificationService;
+import com.decagon.reward_your_teacher.utils.ScheduledTasks;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +28,8 @@ public class NotificationServiceImpl implements NotificationService {
     private NotificationDao notificationDao;
     private StudentDao studentDao;
     private TeacherDao teacherDao;
+
+    private ScheduledTasks scheduledTasks;
 
 
     @Override
@@ -83,23 +91,46 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationEntity> allNotificationsOfA_StudentById(Long studentId) {
-        StudentEntity student = studentDao.findById(studentId).orElseThrow(null);
+    public List<NotificationRequest> allNotificationsOfA_StudentById(Long studentId) {
+        StudentEntity student = studentDao.findById(studentId).orElseThrow(() -> new CustomNotFoundException("Invalid request"));
         List<NotificationEntity> notificationEntity = notificationDao.findNotificationEntitiesByStudent(student);
+
         if (notificationEntity.isEmpty()) {
             throw new CustomNotFoundException("Notification is empty");
         }
-        return notificationEntity;
+        return notificationEntity.stream()
+                .map(n -> new NotificationRequest(n.getMessage(), n.getNotificationType()))
+                .toList();
     }
 
     @Override
-    public List<NotificationEntity> allNotificationsOfA_TeacherById(Long teacherId) {
-        TeacherEntity teacher = teacherDao.findById(teacherId).orElseThrow(null);
+    public List<NotificationRequest> allNotificationsOfA_TeacherById(Long teacherId) {
+        TeacherEntity teacher = teacherDao.findById(teacherId).orElseThrow(() -> new CustomNotFoundException("Invalid request"));
         List<NotificationEntity> notificationEntity = notificationDao.findNotificationEntitiesByTeacher(teacher);
         if (notificationEntity.isEmpty()) {
             throw new CustomNotFoundException("Notification is empty");
         }
-        return notificationEntity;
+        return notificationEntity.stream()
+                .map(n -> new NotificationRequest(n.getMessage(), n.getNotificationType()))
+                .toList();
+    }
+
+    @Override
+    public NotificationResponse studentAppreciatedNotification(Long studentId, Long teacherId) {
+        TeacherEntity teacherEntity = teacherDao.findById(teacherId).orElse(null);
+        StudentEntity studentEntity = studentDao.findById(studentId).orElse(null);
+        if (teacherEntity == null) {
+            throw new CustomNotFoundException ("User with Id " + teacherId + " is not valid");
+        }
+        scheduledTasks.reportCurrentTime();
+        NotificationEntity notification = NotificationEntity.builder()
+                .message(teacherEntity.getName() + " appreciated you \\uD83D\\uDC4D")
+                .student(studentEntity)
+                .teacher(teacherEntity)
+                .build();
+        notification.setCreatedAt(LocalDateTime.now());
+        NotificationEntity notificationEntity = notificationDao.saveRecord(notification);
+        return new NotificationResponse(notificationEntity.getMessage());
     }
 
 }

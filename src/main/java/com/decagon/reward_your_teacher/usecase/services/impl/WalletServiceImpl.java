@@ -2,7 +2,7 @@ package com.decagon.reward_your_teacher.usecase.services.impl;
 
 import com.decagon.reward_your_teacher.domain.dao.*;
 import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
-import com.decagon.reward_your_teacher.domain.entities.Email.EmailDetailsEntity;
+import com.decagon.reward_your_teacher.usecase.payload.request.EmailDetailsRequest;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
@@ -54,11 +54,11 @@ public class WalletServiceImpl implements WalletService {
         }
        WalletEntity wallet = walletDao.findWalletEntityByStudent(student);
         if(wallet == null){
-            throw new CustomNotFoundException("Wallet not found");
+            throw new CustomNotFoundException("Wallet not found or phone number missing");
         }
 
 
-     return new WalletResponse(wallet.getBalance(),wallet.getTotalMoneySent());
+     return new WalletResponse(wallet.getBalance());
 
     }
 
@@ -76,9 +76,9 @@ public class WalletServiceImpl implements WalletService {
 
 
         WalletEntity wallet = walletDao.findWalletEntityByTeacher(teacher)
-                .orElseThrow(()-> new CustomNotFoundException("Wallet not found"));
+                .orElseThrow(()-> new CustomNotFoundException("Wallet not found or Phone number missing"));
 
-        return new WalletResponse(wallet.getBalance(),wallet.getTotalMoneySent());
+        return new WalletResponse(wallet.getBalance());
     }
     @Override
     public PaymentResponse fundWallet (FundWalletRequest fundWalletRequest) throws Exception {
@@ -130,12 +130,12 @@ public class WalletServiceImpl implements WalletService {
                 .description(transactionResponse.getMessage())
                 .build();
         transactionDao.saveRecord(transaction);
-        EmailDetailsEntity emailDetailsEntity = EmailDetailsEntity.builder()
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
                 .msgBody(emailService.WalletFundingEmail(student.getName(),fundWalletRequest.getAmount()))
                 .subject("PodA email")
                 .recipient(appUserEntity.getEmail())
                 .build();
-        emailService.sendMailWithAttachment(emailDetailsEntity);
+        emailService.sendMailWithAttachment(emailDetailsRequest);
 
         return new PaymentResponse(transactionResponse.getData().getReference());
     }
