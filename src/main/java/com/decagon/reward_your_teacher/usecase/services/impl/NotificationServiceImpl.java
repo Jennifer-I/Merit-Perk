@@ -60,7 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationEntity walletFundingNotification(TransactionRequest transactionRequest) {
         Long studentId = transactionRequest.getStudentId();
-        StudentEntity studentEntity = studentDao.findById(studentId).orElse(null);
+        StudentEntity studentEntity = studentDao.findById(studentId).orElseThrow(() -> new CustomNotFoundException("Student not found"));
 
         if (studentEntity == null) {
             throw new CustomNotFoundException("Student with Id " + studentId + " is not valid");
@@ -79,7 +79,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationEntity teacherReceivedNotification(TransactionRequest transactionRequest) {
         NotificationEntity notification = new NotificationEntity();
         Long teacherId = transactionRequest.getTeacherId();
-        TeacherEntity teacher = teacherDao.findById(teacherId).orElse(null);
+        TeacherEntity teacher = teacherDao.findById(teacherId).orElseThrow(() -> new CustomNotFoundException("Teacher not found"));
         if (teacher == null) {
             throw new CustomNotFoundException(" Id " + teacherId + " is not valid");
         }
