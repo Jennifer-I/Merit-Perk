@@ -86,7 +86,7 @@ public class RegisterServiceImpl implements RegisterService {
         String token = UUID.randomUUID().toString();
         EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
                 .msgBody(emailService.buildVerificationEmail(teacherRegistrationRequest.getName(),"http://localhost:9001/api/v1/register/verification?token=" + token))
-                .subject("PodA email")
+                .subject("ACTIVATE YOUR ACCOUNT")
                 .recipient(teacherRegistrationRequest.getEmail())
                 .attachment(fileUrl).build();
         emailService.sendMailWithAttachment(emailDetailsRequest);
