@@ -102,7 +102,7 @@ curl --location --request POST 'http://localhost:9001/api/v1/register/teacher' \
 ---
 ### Email Verification
 
-![This is email verification screenshot](src/main/resources/static/verify_user.png)
+![This is email verification screenshot](src/main/resources/static/verifyUser.png)
 
 ### Response on Verification
 
