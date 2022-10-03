@@ -8,18 +8,18 @@ public class EmailBody {
                 "\n" +
                 "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                 "    <tbody><tr>\n" +
-                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "      <td width=\"100%\" height=\"70\" bgcolor=\"#80B918\">\n" +
                 "        \n" +
-                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:600px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
                 "          <tbody><tr>\n" +
-                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "            <td width=\"70\" bgcolor=\"\" valign=\"middle\">\n" +
                 "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
                 "                  <tbody><tr>\n" +
                 "                    <td style=\"padding-left:10px\">\n" +
                 "                  \n" +
                 "                    </td>\n" +
                 "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:650;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">REWARD YOUR TEACHER</span>\n" +
                 "                    </td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
@@ -38,7 +38,7 @@ public class EmailBody {
                 "        \n" +
                 "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
                 "                  <tbody><tr>\n" +
-                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                    <td bgcolor=\"\" width=\"100%\" height=\"10\"></td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
                 "        \n" +
@@ -76,11 +76,11 @@ public class EmailBody {
                 "\n" +
                 "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                 "    <tbody><tr>\n" +
-                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "      <td width=\"100%\" height=\"70\" bgcolor=\"#80B918\">\n" +
                 "        \n" +
                 "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
                 "          <tbody><tr>\n" +
-                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "            <td width=\"70\" bgcolor=\"\" valign=\"middle\">\n" +
                 "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
                 "                  <tbody><tr>\n" +
                 "                    <td style=\"padding-left:10px\">\n" +
@@ -106,7 +106,7 @@ public class EmailBody {
                 "        \n" +
                 "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
                 "                  <tbody><tr>\n" +
-                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                    <td bgcolor=\"\" width=\"100%\" height=\"10\"></td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
                 "        \n" +
