@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/register")
 public class RegisterController {
 
