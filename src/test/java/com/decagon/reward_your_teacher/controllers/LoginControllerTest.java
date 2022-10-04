@@ -26,6 +26,7 @@ static LoginRequest loginRequest;
 @MockBean
 private  LoginService loginService;
 private static SocialLoginRequest socialLoginRequest;
+
     @BeforeEach
     void setUp() {
          loginRequest = LoginRequest.builder()
