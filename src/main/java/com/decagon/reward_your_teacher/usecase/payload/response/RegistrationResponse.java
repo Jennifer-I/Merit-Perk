@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Builder
 public class RegistrationResponse<T> {
     private String name;
     private String email;
