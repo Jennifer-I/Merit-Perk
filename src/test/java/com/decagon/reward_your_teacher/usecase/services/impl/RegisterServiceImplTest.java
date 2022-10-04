@@ -4,6 +4,7 @@ import com.decagon.reward_your_teacher.domain.dao.*;
 import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
 import com.decagon.reward_your_teacher.domain.entities.SchoolEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
+import com.decagon.reward_your_teacher.domain.entities.email.ConfirmationTokenEntity;
 import com.decagon.reward_your_teacher.domain.entities.enums.Position;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
 import com.decagon.reward_your_teacher.domain.entities.enums.Status;
@@ -24,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -54,7 +54,6 @@ class RegisterServiceImplTest {
 
     @InjectMocks
     private RegisterServiceImpl registerService;
-
     @Test
     @DisplayName("Should throw an exception when the email is already taken")
     void registerTeacherWhenEmailIsAlreadyTakenThenThrowException() {
