@@ -12,28 +12,29 @@ import com.decagon.reward_your_teacher.domain.entities.transact.WalletEntity;
 import com.decagon.reward_your_teacher.infrastructure.configuration.security.JwtService;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.AuthenticationFailedException;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
+import com.decagon.reward_your_teacher.infrastructure.error_handler.EntityAlreadyExistException;
 import com.decagon.reward_your_teacher.usecase.payload.request.LoginRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.SocialLoginRequest;
-import com.decagon.reward_your_teacher.usecase.payload.response.ApiResponse;
 import com.decagon.reward_your_teacher.usecase.payload.response.LoginResponse;
 import com.decagon.reward_your_teacher.usecase.services.LoginService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Transactional
 public class LoginServiceImpl implements LoginService {
+    private final UserDetailsService userService;
     private final StudentDao studentDao;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -53,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
         AppUserEntity appUserEntity = appUserDao
                 .findAppUserEntityByEmailAndRole(studentLoginRequest.getEmail(),Role.STUDENT);
         if(appUserEntity == null){
-           throw new CustomNotFoundException("User does not exist");
+           throw new CustomNotFoundException("Invalid Email or password");
         }
         if(!appUserEntity.getRole().equals(Role.STUDENT)){
             throw new AuthenticationFailedException("Unauthorised");
@@ -61,100 +62,138 @@ public class LoginServiceImpl implements LoginService {
         if(!appUserEntity.isVerified()){
             throw new AuthenticationFailedException("User not verified");
         }
+        StudentEntity student = studentDao.getStudentEntityByAppUserEntity(appUserEntity);
         String token = "Bearer " + jwtService
                 .generateToken(new org.springframework.security.core.userdetails
                         .User(studentLoginRequest.getEmail(), studentLoginRequest.getPassword(), new ArrayList<>()));
-        return new LoginResponse(token);
+        return new LoginResponse(token,student.getName(),student.getDisplayPicture());
     }
 
     @Override
     public LoginResponse studentSocialLogin(SocialLoginRequest socialLoginRequest) {
+        if(socialLoginRequest.getEmail().equals("")){
+            throw new CustomNotFoundException("Enter email");
+        }
         socialLoginRequest.setPassword("");
         AppUserEntity appUser = appUserDao.findAppUserEntityByEmailAndRole(socialLoginRequest.getEmail(),Role.STUDENT);
         if (appUser == null) {
-            AppUserEntity appUserEntity = AppUserEntity.builder()
-                    .password(passwordEncoder.encode(socialLoginRequest.getPassword()))
-                    .email(socialLoginRequest.getEmail())
-                    .isVerified(true)
-                    .role(Role.STUDENT)
-                    .build();
-            AppUserEntity user = appUserDao.saveRecord(appUserEntity);
+            AppUserEntity appUser1 =  appUserDao.findAppUserEntityByEmailAndRole(socialLoginRequest.getEmail(),Role.TEACHER);
+            if(appUser1!= null){
+                throw new CustomNotFoundException("Already Registered as a Teacher");
+            }else {
+                AppUserEntity appUserEntity = AppUserEntity.builder()
+                        .password(passwordEncoder.encode(socialLoginRequest.getPassword()))
+                        .email(socialLoginRequest.getEmail())
+                        .isVerified(true)
+                        .role(Role.STUDENT)
+                        .build();
+                AppUserEntity user = appUserDao.saveRecord(appUserEntity);
 
-            String name = socialLoginRequest.getFirstName() + " " + socialLoginRequest.getLastName();
-            StudentEntity studentEntity = StudentEntity.builder()
-                            .name(name)
-                            .displayPicture(socialLoginRequest.getDisplayPicture())
-                            .appUserEntity(user).build();
+                String name = socialLoginRequest.getFirstName() + " " + socialLoginRequest.getLastName();
+                StudentEntity studentEntity = StudentEntity.builder()
+                        .name(name)
+                        .displayPicture(socialLoginRequest.getDisplayPicture())
+                        .appUserEntity(user).build();
 
-            studentDao.saveRecord(studentEntity);
-            WalletEntity wallet = new WalletEntity();
-            wallet.setBalance(new BigDecimal("0.00"));
-            wallet.setStudent(studentEntity);
-            wallet.setTotalMoneySent(new BigDecimal("0.00"));
-            walletDao.saveRecord(wallet);
+                studentDao.saveRecord(studentEntity);
+                WalletEntity wallet = new WalletEntity();
+                wallet.setBalance(new BigDecimal("0.00"));
+                wallet.setStudent(studentEntity);
+                wallet.setTotalMoneySent(new BigDecimal("0.00"));
+                walletDao.saveRecord(wallet);
+                StudentEntity student = studentDao.getStudentEntityByAppUserEntity(appUserEntity);
+                String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
+                        .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest
+                        .getFirstName(), new ArrayList<>()));
+                return new LoginResponse(token,student.getName(),student.getDisplayPicture());
+            }
 
         }
+        StudentEntity student = studentDao.getStudentEntityByAppUserEntity(appUser);
         String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
                 .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest
                 .getFirstName(), new ArrayList<>()));
-        return new LoginResponse(token);
+        return new LoginResponse(token,student.getName(),student.getDisplayPicture());
     }
 
     @Override
     public LoginResponse loginTeacher(LoginRequest teacherLoginRequest)  {
-        Authentication auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(teacherLoginRequest
-                        .getEmail(), teacherLoginRequest.getPassword()));
-        if (!auth.isAuthenticated()) {
-            throw new AuthenticationFailedException(("wrong email or password"));
+
+
+      UserDetails userDetailsService = userService.loadUserByUsername(teacherLoginRequest.getEmail());
+      if(userDetailsService == null){
+          throw new CustomNotFoundException("Wrong email");
+      }
+
+        if(!(passwordEncoder.matches(teacherLoginRequest.getPassword(),userDetailsService.getPassword()))){
+            throw new CustomNotFoundException("Wrong password");
         }
+
+        //SecurityContextHolder.getContext().setAuthentication(auth);
+
+
         AppUserEntity appUserEntity = appUserDao
                 .findAppUserEntityByEmailAndRole(teacherLoginRequest.getEmail(),Role.TEACHER);
         if(appUserEntity == null){
            throw new CustomNotFoundException("User does not exist");
         }
-        if(!appUserEntity.getRole().equals(Role.TEACHER)){
-            throw new AuthenticationFailedException("Unauthorised");
-        }
+
         if(!appUserEntity.isVerified()){
             throw new AuthenticationFailedException("User not verified");
         }
+        TeacherEntity teacher = teacherDao.getTeacherEntityByAppUserEntity(appUserEntity);
         String token = "Bearer " + jwtService
                 .generateToken(new org.springframework.security.core.userdetails
                         .User(teacherLoginRequest.getEmail(), teacherLoginRequest.getPassword(), new ArrayList<>()));
-        return new LoginResponse(token);
+        return new LoginResponse(token,teacher.getName(),teacher.getDisplayPicture());
 
     }
 
     @Override
     public LoginResponse teacherSocialLogin(SocialLoginRequest socialLoginRequest) {
+        if(socialLoginRequest.getEmail().equals("")){
+            throw new EntityAlreadyExistException("Enter email");
+        }
         socialLoginRequest.setPassword("");
 
         AppUserEntity appUser = appUserDao.findAppUserEntityByEmailAndRole(socialLoginRequest.getEmail(),Role.TEACHER);
-        if (appUser == null) {
-            AppUserEntity appUserEntity = AppUserEntity.builder()
-                    .password(passwordEncoder.encode(socialLoginRequest.getPassword()))
-                    .email(socialLoginRequest.getEmail())
-                    .role(Role.TEACHER)
-                    .isVerified(true)
-                    .build();
-            AppUserEntity user = appUserDao.saveRecord(appUserEntity);
+        if(appUser == null){
+        AppUserEntity appUser1 =  appUserDao.findAppUserEntityByEmailAndRole(socialLoginRequest.getEmail(),Role.STUDENT);
+            if(appUser1!= null){
+                throw new CustomNotFoundException("Already Registered as a student");
+            }
+            else {
+                AppUserEntity appUserEntity = AppUserEntity.builder()
+                        .password(passwordEncoder.encode(socialLoginRequest.getPassword()))
+                        .email(socialLoginRequest.getEmail())
+                        .role(Role.TEACHER)
+                        .isVerified(true)
+                        .build();
+                AppUserEntity user = appUserDao.saveRecord(appUserEntity);
 
-            String name = socialLoginRequest.getFirstName() + " " + socialLoginRequest.getLastName();
-            TeacherEntity teacherEntity = TeacherEntity.builder()
-                            .name(name)
-                            .appUserEntity(user)
-                            .displayPicture(socialLoginRequest.getDisplayPicture()).build();
-            teacherDao.saveRecord(teacherEntity);
-            WalletEntity wallet = new WalletEntity();
-            wallet.setBalance(new BigDecimal("0.00"));
-            wallet.setTeacher(teacherEntity);
-            wallet.setTotalMoneySent(new BigDecimal("0.00"));
-            walletDao.saveRecord(wallet);
+                String name = socialLoginRequest.getFirstName() + " " + socialLoginRequest.getLastName();
+                TeacherEntity teacherEntity = TeacherEntity.builder()
+                        .name(name)
+                        .appUserEntity(user)
+                        .displayPicture(socialLoginRequest.getDisplayPicture()).build();
+                teacherDao.saveRecord(teacherEntity);
+                WalletEntity wallet = new WalletEntity();
+                wallet.setBalance(new BigDecimal("0.00"));
+                wallet.setTeacher(teacherEntity);
+                wallet.setTotalMoneySent(new BigDecimal("0.00"));
+                walletDao.saveRecord(wallet);
+                TeacherEntity teacher = teacherDao.getTeacherEntityByAppUserEntity(appUserEntity);
+                String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
+                        .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest
+                        .getFirstName(), new ArrayList<>()));
+                return new LoginResponse(token,teacher.getName(),teacher.getDisplayPicture());
+            }
         }
+
+        TeacherEntity teacher = teacherDao.getTeacherEntityByAppUserEntity(appUser);
         String token = "Bearer " + jwtService.generateToken(new org.springframework.security.core
                 .userdetails.User(socialLoginRequest.getEmail(), socialLoginRequest
                 .getFirstName(), new ArrayList<>()));
-        return new LoginResponse(token);
+        return new LoginResponse(token,teacher.getName(),teacher.getDisplayPicture());
     }
 }

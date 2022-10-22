@@ -1,15 +1,18 @@
 package com.decagon.reward_your_teacher.usecase.services.impl;
 
 import com.decagon.reward_your_teacher.domain.dao.*;
-import com.decagon.reward_your_teacher.domain.entities.*;
+import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
+import com.decagon.reward_your_teacher.domain.entities.SchoolEntity;
+import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
+import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.email.ConfirmationTokenEntity;
-import com.decagon.reward_your_teacher.domain.entities.transact.WalletEntity;
-import com.decagon.reward_your_teacher.usecase.payload.request.EmailDetailsRequest;
 import com.decagon.reward_your_teacher.domain.entities.enums.Position;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
 import com.decagon.reward_your_teacher.domain.entities.enums.Status;
+import com.decagon.reward_your_teacher.domain.entities.transact.WalletEntity;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.EntityAlreadyExistException;
+import com.decagon.reward_your_teacher.usecase.payload.request.EmailDetailsRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.StudentRegistrationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.TeacherRegistrationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.response.RegistrationResponse;
@@ -74,6 +77,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .phoneNumber(teacherRegistrationRequest.getPhoneNumber())
                 .school(school)
                 .nin(fileUrl)
+                .displayPicture(fileUrl)
                 .yearsOfTeaching(teacherRegistrationRequest.getYearsOfTeaching())
                 .subjectsTaught(teacherRegistrationRequest.getSubjectTaught())
                 .appUserEntity(appUserEntity1)
@@ -86,7 +90,7 @@ public class RegisterServiceImpl implements RegisterService {
         String token = UUID.randomUUID().toString();
         EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
                 .msgBody(emailService.buildVerificationEmail(teacherRegistrationRequest.getName(),"http://localhost:9001/api/v1/register/verification?token=" + token))
-                .subject("ACTIVATE YOUR ACCOUNT")
+                .subject("PodA email")
                 .recipient(teacherRegistrationRequest.getEmail())
                 .attachment(fileUrl).build();
         emailService.sendMailWithAttachment(emailDetailsRequest);

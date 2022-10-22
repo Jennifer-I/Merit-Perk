@@ -8,7 +8,9 @@ import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
 import com.decagon.reward_your_teacher.domain.entities.SchoolEntity;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
+import com.decagon.reward_your_teacher.domain.entities.enums.Position;
 import com.decagon.reward_your_teacher.domain.entities.enums.Role;
+import com.decagon.reward_your_teacher.domain.entities.enums.Status;
 import com.decagon.reward_your_teacher.infrastructure.configuration.security.UserDetails;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
 import com.decagon.reward_your_teacher.infrastructure.error_handler.EntityAlreadyExistException;
@@ -73,7 +75,7 @@ public class ProfileServiceImpl implements ProfileService {
         String email = UserDetails.getLoggedInUserDetails();
 
 
-        SchoolEntity school = schoolDao.findSchool(teacherProfileRequest.getSchoolTaught())
+        SchoolEntity school = schoolDao.findSchool(teacherProfileRequest.getSchool())
                 .orElseThrow(() -> new CustomNotFoundException("School not found"));
 
         AppUserEntity appUserEntity = appUserDao.findAppUserEntityByEmailAndRole(email,Role.TEACHER);
@@ -81,7 +83,7 @@ public class ProfileServiceImpl implements ProfileService {
             throw new CustomNotFoundException("Teacher not found");
         }
         AppUserEntity appUserEntity1 = appUserDao.findAppUserEntityByEmail(teacherProfileRequest.getEmail());
-        if(appUserEntity1 != null){
+        if(appUserEntity1 != null && !(email.equals(teacherProfileRequest.getEmail()))){
             throw new EntityAlreadyExistException("Email already exist");
         }
         appUserEntity.setEmail(teacherProfileRequest.getEmail());
@@ -92,8 +94,12 @@ public class ProfileServiceImpl implements ProfileService {
         teacher.setName(teacherProfileRequest.getName());
         teacher.setSchool(school);
         teacher.setYearsOfTeaching(teacherProfileRequest.getYearsOfTeaching());
-        teacher.setPhoneNumber(teacherProfileRequest.getPhone());
+        teacher.setPhoneNumber(teacherProfileRequest.getPhoneNumber());
         teacher.setNin(url);
+        teacher.setSubjectsTaught(teacherProfileRequest.getSubjectTaught());
+        teacher.setAbout(teacherProfileRequest.getAbout());
+        teacher.setPosition(Position.valueOf(teacherProfileRequest.getPosition().toUpperCase()));
+        teacher.setStatus(Status.valueOf(teacherProfileRequest.getStatus().toUpperCase()));
 
         EditProfileResponse editProfileResponse = payLoadMapper.TeacherEditMapper( teacherDao.saveRecord(teacher));
         return editProfileResponse;

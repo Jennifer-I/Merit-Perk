@@ -15,7 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +39,7 @@ public class SearchServiceImpl implements SearchService {
         schoolEntityList.forEach(schoolEntity -> {
             SchoolSearchResponse response =new SchoolSearchResponse();
             response.setSchoolName(schoolEntity.getSchoolName());
-
+            response.setId((schoolEntity.getId()));
             listOfSchoolName.add(response);
         });
 

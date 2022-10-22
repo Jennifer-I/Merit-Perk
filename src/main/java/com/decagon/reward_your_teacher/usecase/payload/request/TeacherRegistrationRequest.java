@@ -25,7 +25,7 @@ public class TeacherRegistrationRequest {
     private String school;
 
     @Pattern(regexp = "[+-]?[0-9][0-9]*")
-    private Integer yearsOfTeaching;
+    private String yearsOfTeaching;
     @Pattern(regexp = "^[A-Za-z]*$", message = "Invalid Input")
     private String subjectTaught;
     @Pattern(regexp = "^[A-Za-z|\\s]*$",message = "Invalid school type")

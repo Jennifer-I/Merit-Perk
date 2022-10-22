@@ -1,13 +1,12 @@
 package com.decagon.reward_your_teacher.usecase.payload.response;
 
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Builder
 public class RegistrationResponse<T> {
     private String name;
     private String email;

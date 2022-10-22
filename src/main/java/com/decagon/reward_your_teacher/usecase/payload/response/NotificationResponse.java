@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationResponse {
     private String message;
+    private String date;
 }

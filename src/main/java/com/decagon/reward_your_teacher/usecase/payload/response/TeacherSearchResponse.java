@@ -13,5 +13,10 @@ public class TeacherSearchResponse {
 
     private String name;
     private String school;
-    private Integer yearsOfTeaching;
+    private String yearsOfTeaching;
+    private String  position;
+    private String email;
+    private String phoneNumber;
+    private String about;
+    private String displayPicture;
 }

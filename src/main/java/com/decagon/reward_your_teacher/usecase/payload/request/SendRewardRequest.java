@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 
 public class SendRewardRequest {
     @Pattern(regexp = "[+-]?[0-9][0-9]*")
-    private BigDecimal Amount;
+    private BigDecimal amount;
 
     @Pattern(regexp = "^[A-Za-z|\\s]*$", message = "Invalid name")
     private String teacherName;

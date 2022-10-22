@@ -5,8 +5,6 @@ import com.decagon.reward_your_teacher.usecase.payload.request.TeacherRegistrati
 import com.decagon.reward_your_teacher.usecase.payload.response.RegistrationResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public interface RegisterService {
     RegistrationResponse registerStudent(StudentRegistrationRequest studentRegistrationRequest) throws Exception;
 

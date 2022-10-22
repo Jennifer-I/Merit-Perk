@@ -13,6 +13,7 @@ import com.decagon.reward_your_teacher.infrastructure.configuration.security.Use
 import com.decagon.reward_your_teacher.infrastructure.error_handler.CustomNotFoundException;
 import com.decagon.reward_your_teacher.usecase.payload.response.TransactionResponse;
 import com.decagon.reward_your_teacher.usecase.services.TransactionService;
+import com.decagon.reward_your_teacher.utils.LocalDateTimeConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,14 +49,14 @@ public class TransactionServiceImpl implements TransactionService {
         StudentEntity student = studentDao.getStudentEntityByAppUserEntity(appUserEntity);
 
         Pageable pageable = PageRequest.of(offset,pageSize);
-        Page<TransactionEntity> pageList = transactionDao.findTransactionEntitiesByStudent(pageable,student);
+        Page<TransactionEntity> pageList = transactionDao.findTransactionEntitiesByStudentOrderByCreatedAtDesc(pageable,student);
         List<TransactionResponse> transactionResponses = new ArrayList<>();
         pageList.forEach(page->{
             TransactionResponse transactionResponse1 = TransactionResponse.builder()
                     .transactionType(page.getTransactionType())
                     .amount(page.getAmount())
                     .description(page.getDescription())
-                    .createdAt(page.getCreatedAt())
+                    .createdAt(LocalDateTimeConverter.localDateTimeConverter(page.getCreatedAt()))
                     .build();
             transactionResponses.add(transactionResponse1);
 
@@ -83,15 +84,19 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         Pageable pageable = PageRequest.of(offset,pageSize);
-        Page<TransactionEntity> pageList = transactionDao.findTransactionEntitiesByTeacher(pageable,teacher);
+        Page<TransactionEntity> pageList = transactionDao.findTransactionEntitiesByTeacherOrderByCreatedAtDesc(pageable,teacher);
         List<TransactionResponse> transactionResponses = new ArrayList<>();
         pageList.forEach(page->{
             TransactionResponse transactionResponse1 = TransactionResponse.builder()
                     .transactionType(page.getTransactionType())
                     .amount(page.getAmount())
                     .description(page.getDescription())
-                    .createdAt(page.getCreatedAt())
-                    .build();
+                    .createdAt(LocalDateTimeConverter.localDateTimeConverter(page.getCreatedAt()))
+                    .studentId(page.getStudent().getId())
+                    .studentName(page.getStudent().getName())
+                    .studentEmail(page.getStudent().getAppUserEntity().getEmail())
+                    .studentSchool(page.getStudent().getSchool().getSchoolName())
+                    .studentPhone(page.getStudent().getPhoneNumber()).transactionId(page.getId()).build();
             transactionResponses.add(transactionResponse1);
 
         });

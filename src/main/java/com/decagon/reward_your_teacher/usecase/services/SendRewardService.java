@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 public interface SendRewardService {
 
-    SendRewardResponse sendRewardResponse(SendRewardRequest sendRewardRequest);
+    SendRewardResponse sendRewardResponse(SendRewardRequest sendRewardRequest) throws Exception;
 
     BigDecimal getStudentWalletBalance(StudentEntity studentEntity);
 

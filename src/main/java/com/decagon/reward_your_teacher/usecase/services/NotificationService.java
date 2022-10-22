@@ -1,7 +1,6 @@
 package com.decagon.reward_your_teacher.usecase.services;
 
 import com.decagon.reward_your_teacher.domain.entities.message.NotificationEntity;
-import com.decagon.reward_your_teacher.usecase.payload.request.NotificationRequest;
 import com.decagon.reward_your_teacher.usecase.payload.request.TransactionRequest;
 import com.decagon.reward_your_teacher.usecase.payload.response.NotificationResponse;
 
@@ -14,11 +13,11 @@ public interface NotificationService {
 
     NotificationEntity teacherReceivedNotification(TransactionRequest transactionRequest);
 
-    List<NotificationRequest> allNotificationsOfA_StudentById(Long studentId);
+    List<NotificationResponse> allNotificationsOfA_StudentById();
 
-    List<NotificationRequest> allNotificationsOfA_TeacherById(Long teacherId);
+    List<NotificationResponse> allNotificationsOfA_TeacherById();
 
-    NotificationResponse studentAppreciatedNotification(Long studentId, Long teacherId);
+    NotificationResponse studentAppreciatedNotification(Long transactionId);
 
 }
 
