@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
-    Page<TransactionEntity> findTransactionEntitiesByStudent(Pageable pageable, StudentEntity student);
-    Page<TransactionEntity> findTransactionEntitiesByTeacher(Pageable pageable, TeacherEntity teacher);
+    Page<TransactionEntity> findTransactionEntitiesByStudentOrderByCreatedAtDesc(Pageable pageable, StudentEntity student);
+    Page<TransactionEntity> findTransactionEntitiesByTeacherOrderByCreatedAtDesc(Pageable pageable, TeacherEntity teacher);
 }

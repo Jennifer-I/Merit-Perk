@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/register")
+@CrossOrigin(origins = "http://localhost:3000/**")
 public class RegisterController {
 
     private final RegisterService registerService;
@@ -36,8 +35,16 @@ public class RegisterController {
         return new ResponseEntity<>(new ApiResponse<>("Registered Successfully",true,response), HttpStatus.CREATED);
     }
     @GetMapping(value = "/verification")
-    public ResponseEntity<ApiResponse<RegistrationResponse>> verifyUser(@Valid @RequestParam("token") String token) throws Exception {
+    public String verifyUser(@Valid @RequestParam("token") String token) throws Exception {
         registerService.verifyUser(token);
-        return new ResponseEntity<>(new ApiResponse<>("Registered Successfully",true), HttpStatus.CREATED);
+//        String link = "http://localhost:3000/login";
+//        String link = "www.google.com";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Email confirmed, follow the link below to login.");
+        sb.append("<br><br><a href=\"http://localhost:3000/login\" target=\"_blank\">Login</a>");
+
+        String link = sb.toString();
+//        return "Registered successfully, follow the link to login, <a href=\""+ link +"\" target=\"_blank\">Login</a>";
+        return link;
     }
 }

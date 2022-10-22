@@ -6,8 +6,6 @@ import com.decagon.reward_your_teacher.domain.entities.enums.Role;
 import com.decagon.reward_your_teacher.infrastructure.persistence.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class AppDaoUserImpl extends CrudDaoImpl<AppUserEntity, Long> implements AppUserDao {
     private final AppUserRepository appUserRepository;

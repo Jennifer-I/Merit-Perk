@@ -1,7 +1,6 @@
 package com.decagon.reward_your_teacher.infrastructure.error_handler;
 
 import com.decagon.reward_your_teacher.usecase.payload.response.ApiResponse;
-import com.decagon.reward_your_teacher.usecase.payload.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;

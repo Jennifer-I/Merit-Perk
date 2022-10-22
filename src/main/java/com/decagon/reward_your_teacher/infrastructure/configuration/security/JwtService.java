@@ -19,7 +19,7 @@ public class JwtService implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
 
 //    @Value("${jwt.expiry: Expiry}")
-    public static long JWT_TOKEN_VALIDITY = 1800;
+    public static long JWT_TOKEN_VALIDITY = 180000000;
     @Value("${jwt.adminKey: adminKey}")
     private String adminKey;
 

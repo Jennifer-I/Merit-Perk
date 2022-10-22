@@ -1,7 +1,5 @@
 package com.decagon.reward_your_teacher.infrastructure.controllers;
 
-import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
-import com.decagon.reward_your_teacher.domain.entities.transact.TransactionEntity;
 import com.decagon.reward_your_teacher.usecase.payload.response.ApiResponse;
 import com.decagon.reward_your_teacher.usecase.payload.response.TransactionResponse;
 import com.decagon.reward_your_teacher.usecase.services.TransactionService;
@@ -32,7 +30,7 @@ public class TransactionController {
        List<TransactionResponse> transactionEntities = transactionService.getStudentTransactions(offset,pageSize);
         return new ResponseEntity<>(new ApiResponse<>("success",true,transactionEntities), HttpStatus.OK);
     }
-    @GetMapping("/teacher")
+    @GetMapping("teacher")
     public ResponseEntity<ApiResponse<List<TransactionResponse>>> getTeacherTransactions(
             @RequestParam("offset") int offset,
             @RequestParam("pageSize") int pageSize

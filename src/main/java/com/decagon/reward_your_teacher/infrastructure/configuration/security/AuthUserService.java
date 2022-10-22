@@ -21,7 +21,7 @@ public class AuthUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUserEntity user = userDao.findAppUserEntityByEmail(email);
         if(user == null){
-           throw new CustomNotFoundException("user not found");
+           throw new CustomNotFoundException("Wrong email");
         }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
     }

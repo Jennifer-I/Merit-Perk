@@ -6,14 +6,13 @@ import com.decagon.reward_your_teacher.usecase.payload.response.ApiResponse;
 import com.decagon.reward_your_teacher.usecase.payload.response.EditProfileResponse;
 import com.decagon.reward_your_teacher.usecase.payload.response.ViewTeacherProfileResponse;
 import com.decagon.reward_your_teacher.usecase.services.ProfileService;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import javax.swing.text.View;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +30,9 @@ public class ProfileController {
     }
 
     @PostMapping("/edit/teacher")
-    public ResponseEntity<ApiResponse<EditProfileResponse>> editTeacherProfile(@Valid TeacherProfileRequest teacherProfileRequest, MultipartFile file) throws IOException {
-       EditProfileResponse editProfileResponse =  profileService.editTeacherProfile(teacherProfileRequest,file);
+    public ResponseEntity<ApiResponse<EditProfileResponse>> editTeacherProfile(@Valid @RequestParam("editProfile") String teacherProfileRequest,@RequestParam("file") MultipartFile file) throws IOException {
+        TeacherProfileRequest teacherRegistrationRequest = new Gson().fromJson(teacherProfileRequest,TeacherProfileRequest.class);
+       EditProfileResponse editProfileResponse =  profileService.editTeacherProfile(teacherRegistrationRequest,file);
         return new ResponseEntity<>(new ApiResponse<>("Edited successfully",true,editProfileResponse),HttpStatus.OK);
     }
     @GetMapping("/view/teacher/{teacherName}")

@@ -23,7 +23,7 @@ public class WalletController {
         return new ResponseEntity<>(new ApiResponse<>("success",true,paymentResponse), HttpStatus.OK);
     }
 
-    @GetMapping("/student/balance")
+    @GetMapping("student/balance")
     public ResponseEntity<ApiResponse<WalletResponse>> getStudentBalance() {
        WalletResponse walletResponse = walletService.getStudentWalletBalance();
         return new ResponseEntity<>(new ApiResponse<>("success",true,walletResponse),HttpStatus.OK);
