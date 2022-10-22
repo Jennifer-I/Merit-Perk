@@ -3,14 +3,17 @@ package com.decagon.reward_your_teacher.domain.dao;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.message.NotificationEntity;
+import com.decagon.reward_your_teacher.domain.entities.transact.TransactionEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface NotificationDao extends CrudDao<NotificationEntity, Long> {
-  List<NotificationEntity> findNotificationEntitiesByStudent(StudentEntity student);
+  List<NotificationEntity> findNotificationEntitiesByStudentOrderByCreatedAtDesc(StudentEntity student);
 
-  List<NotificationEntity> findNotificationEntitiesByTeacher(TeacherEntity teacher);
+  List<NotificationEntity> findNotificationEntitiesByTeacherOrderByCreatedAtDesc(TeacherEntity teacher);
+  NotificationEntity findNotificationEntityByTeacherAndStudentOrderByCreatedAtDesc(TeacherEntity teacher, StudentEntity student);
+  NotificationEntity findNotificationEntityByTransactionOrderByCreatedAtDesc(TransactionEntity transaction);
+
 
 }

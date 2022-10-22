@@ -4,6 +4,7 @@ import com.decagon.reward_your_teacher.domain.entities.AbstractEntity;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.domain.entities.enums.NotificationType;
+import com.decagon.reward_your_teacher.domain.entities.transact.TransactionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
@@ -36,4 +37,9 @@ public class NotificationEntity extends AbstractEntity {
     @JsonBackReference
     @ManyToOne
     private TeacherEntity teacher;
+
+    private boolean isAppreciated = false;
+
+    @OneToOne
+    private TransactionEntity transaction;
 }

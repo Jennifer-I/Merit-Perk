@@ -28,7 +28,7 @@ public class TeacherEntity extends AbstractEntity {
     @Column(unique = true,columnDefinition = "VARCHAR(100)")
     private String phoneNumber;
 
-    private Integer yearsOfTeaching;
+    private String yearsOfTeaching;
 
     @Column(columnDefinition = "VARCHAR(100)")
     private String subjectsTaught;
@@ -52,6 +52,7 @@ public class TeacherEntity extends AbstractEntity {
     @ManyToOne
     @JoinColumn
     private SchoolEntity school;
+
 
     @JsonManagedReference
     @OneToOne(mappedBy = "teacher", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)

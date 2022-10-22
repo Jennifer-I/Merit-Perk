@@ -29,6 +29,7 @@ public class StudentEntity extends AbstractEntity{
     @Column(columnDefinition = "VARCHAR(100)")
     private  String phoneNumber;
 
+
     @Column(columnDefinition = "VARCHAR(100)")
     private String title;
 

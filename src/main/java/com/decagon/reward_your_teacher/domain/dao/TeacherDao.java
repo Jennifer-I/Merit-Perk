@@ -6,7 +6,6 @@ import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

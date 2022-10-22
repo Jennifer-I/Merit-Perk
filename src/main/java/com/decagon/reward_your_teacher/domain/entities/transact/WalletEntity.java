@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Table(name = "wallet")
 public class WalletEntity extends AbstractEntity {
 
-    @DecimalMin(value = "0.0", inclusive = false)
+    @DecimalMin(value = "0.00", inclusive = false)
     @Digits(integer = 9, fraction = 2)
     @Column(
             name = "balance",

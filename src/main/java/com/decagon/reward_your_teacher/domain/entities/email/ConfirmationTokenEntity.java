@@ -2,9 +2,14 @@ package com.decagon.reward_your_teacher.domain.entities.email;
 
 import com.decagon.reward_your_teacher.domain.entities.AbstractEntity;
 import com.decagon.reward_your_teacher.domain.entities.AppUserEntity;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Getter

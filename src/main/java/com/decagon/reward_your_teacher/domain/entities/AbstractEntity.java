@@ -1,5 +1,6 @@
 package com.decagon.reward_your_teacher.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +23,12 @@ public abstract class AbstractEntity {
     private Long id;
 
     @CreationTimestamp
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
