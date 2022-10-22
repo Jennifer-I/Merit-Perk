@@ -109,4 +109,10 @@ if(details.getAttachment() != null) {
     public String WalletFundingEmail(String name, String amount)  {
        return EmailBody.walletFundingEmailBody(name,amount);
     }
+    public String sendFundsEmail(String teacherName,String StudentName, String amount)  {
+        return EmailBody.sendFunds(teacherName,StudentName,amount);
+    }
+    public String receiveFundsEmail(String teacherName,String StudentName, String amount)  {
+        return EmailBody.ReceiveFunds(teacherName,StudentName,amount);
+    }
 }

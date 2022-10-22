@@ -3,7 +3,6 @@ package com.decagon.reward_your_teacher.utils;
 import com.decagon.reward_your_teacher.domain.entities.StudentEntity;
 import com.decagon.reward_your_teacher.domain.entities.TeacherEntity;
 import com.decagon.reward_your_teacher.usecase.payload.response.EditProfileResponse;
-import com.decagon.reward_your_teacher.usecase.payload.response.LoginResponse;
 import com.decagon.reward_your_teacher.usecase.payload.response.RegistrationResponse;
 import org.springframework.stereotype.Service;
 
