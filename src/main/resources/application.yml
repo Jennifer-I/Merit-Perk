@@ -2,7 +2,7 @@ server:
   port: 9001
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/rewardyourteacher_db
+    url: jdbc:postgresql://localhost:5432/reward_db
     password:
     username:
   jpa:
@@ -41,7 +41,7 @@ spring:
               enable: 'true'
             auth: 'true'
       host: smtp.gmail.com
-      username: rewardyourteacher.pod.a@gmail.com #<Login User to SMTP server>
+      username: rewardy.pod.a@gmail.com #<Login User to SMTP server>
       password:  #<Login password to SMTP server>
       port: '587'
   springdoc:

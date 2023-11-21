@@ -1,4 +1,4 @@
-name: RewardYourTeacher CI
+name: merit-perk CI
 
 on:
   push:

@@ -14,12 +14,12 @@ An API that serves data to a JavaScript front-end.
 
 ### Retrieve all schools
 
-* Endpoint: `http://localhost:9001/api/v1/search/schools?offset=0&pageSize=10`
+* Endpoint: `http://localhost:8099/api/v1/search/schools?offset=0&pageSize=10`
 
 ### Payload
 
 ```
-curl --location --request GET 'http://localhost:9001/api/v1/search/schools?offset=0&pageSize=10' \
+curl --location --request GET 'http://localhost:8099/api/v1/search/schools?offset=0&pageSize=10' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmb3J0dW5lbndhY2h1a3d1QGdtYWlsLmNvbSIsImV4cCI6MTY2NDY1NzcxMywiaWF0IjoxNjY0NjU1OTEzfQ.n-GSwjoD9mPKLXFEZ7-3mz2t7G1M5dN3NpVVbmZzHb3pjJotU42WnK8ZqFj17uQOcN4a_7uX0ZH4E43N1waa7Q' \
 --data-raw ''
 ```
@@ -65,22 +65,22 @@ curl --location --request GET 'http://localhost:9001/api/v1/search/schools?offse
 
 ### Register a teacher
 
-* Endpoint: `http://localhost:9001/api/v1/teacher/register`
+* Endpoint: `http://localhost:8099/api/v1/teacher/register`
 
 ### Payload
 
 ```
-curl --location --request POST 'http://localhost:9001/api/v1/register/teacher' \
+curl --location --request POST 'http://localhost:8099/api/v1/register/teacher' \
 --form 'file=@"/Users/decagon/Downloads/coverPhoto2.jpeg"' \
 --form 'registration="{
-    \"name\":\"Fortunate\",
-\"email\":\"fortunenwachukwu@gmail.com\",
+    \"name\":\"Jennifer\",
+\"email\":\"jenniferewuzie025@gmail.com.com\",
     \"password\":\"1234\",
     \"school\" : \"Pearlville School\",
     \"yearsOfTeaching\":\"3\",
-    \"subjectTaught\":\"English\",
+    \"subjectTaught\":\"Economics\",
     \"schoolType\":\"Primary\",
-  \"phoneNumber\":\"07034999322\",
+  \"phoneNumber\":\"08135671010\",
     \"position\":\"HeadTeacher\",
     \"status\":\"Active\",
     \"about\":\"I am a teacher\"
@@ -93,16 +93,16 @@ curl --location --request POST 'http://localhost:9001/api/v1/register/teacher' \
     "status": true,
     "timeCreated": "2022-10-01T21:14:00.437287",
     "data": {
-        "name": "Fortunate",
-        "email": "fortunenwachukwu@gmail.com",
-        "id": 5
+        "name": "Jennifer",
+        "email": "jenniferewuzie025@gmail.com",
+        "id": 4
     }
 }
 ```
 ---
-### Email Verification
 
-![This is email verification screenshot](src/main/resources/static/verifyUser.png)
+
+
 
 ### Response on Verification
 
@@ -113,19 +113,19 @@ curl --location --request POST 'http://localhost:9001/api/v1/register/teacher' \
   "timeCreated": "2022-10-01T21:15:33.796355",
   "data": {
     "name": "Fortunate",
-    "email": "fortunenwachukwu@gmail.com"
+    "email": "jenniferewuzie025@gmail.com"
   }
 }
 ```
 ---
 ### Login a teacher
 
-* Endpoint: `http://localhost:9001/api/v1/teacher/login`
+* Endpoint: `http://localhost:8099/api/v1/teacher/login`
 
 ### Payload
 
 ```
-curl --location --request POST 'http://localhost:9001/api/v1/login/teacher' \
+curl --location --request POST 'http://localhost:8099/api/v1/login/teacher' \
 --header 'Content-Type: application/json' \
 --data-raw '{
      "email" : "fortunenwachukwu@gmail.com",
@@ -146,7 +146,7 @@ curl --location --request POST 'http://localhost:9001/api/v1/login/teacher' \
 
 ### Get Teacher Wallet Balance
 
-* Endpoint: `http://localhost:9001/api/v1/wallet/teacher/balance`
+* Endpoint: `http://localhost:8099/api/v1/wallet/teacher/balance`
 
 ### Payload
 
